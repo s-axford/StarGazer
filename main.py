@@ -9,6 +9,11 @@ def crop_image(gray, img,tol=0):
     mask = gray>tol
     return img[np.ix_(mask.any(1),mask.any(0))]
 
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return array[idx]
+
 def main():
 
     # Read in Image
@@ -28,25 +33,30 @@ def main():
     #Find stars
     shapedetector = ShapeDetector()
     x, y, labels = shapedetector.detect_stars(img)
-    cv2.imshow('Finished Product', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    shapedetector.detect_lines(img)
+    lines = shapedetector.detect_lines(img)
 
-    print(labels)
     fig, ax = plt.subplots() 
     plt.scatter(x, y)
-    # plt.axis([-2, 2, -2, 2]) // TODO have this as scale returned from detect_stars and detect_lines
+    # plt.axis([-2, 2, -2, 2]) # TODO have this as scale returned from detect_stars and detect_lines
     for i, txt in enumerate(labels):
         ax.annotate(txt, (x[i], y[i]))
+    # for line in lines:
+    #     x1 = find_nearest(x, line.item(0))
+    #     x2 = find_nearest(x, line.item(2))
+    #     y1 = find_nearest(y, -line.item(1))
+    #     y2 = find_nearest(y, -line.item(3))
+    #     plt.plot((x1, x2), (y1, y2), 'ro-', linewidth=2, markersize=0)
+    for line in lines:
+        plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
+
     plt.show()
 
     #Crop
     img = crop_image(gray, img, 40)
 
-    cv2.imshow('Finished Product', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('Finished Product', img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()

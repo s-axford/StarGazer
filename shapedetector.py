@@ -1,6 +1,7 @@
 # import the necessary packages
 import cv2
 import numpy as np
+#include <math.h>
  
 class ShapeDetector:
  
@@ -42,7 +43,7 @@ class ShapeDetector:
     #Removes all stars from an image and returns result
     #img - image stars should be removed from
     def remove_stars(self, img):
-        final = img
+        final = img.copy()
         stars = self.get_stars(img)
         ret,thresh = cv2.threshold(stars,127,255,1)
 
@@ -53,12 +54,12 @@ class ShapeDetector:
                 cv2.drawContours(final,[cnt],0,(0,0,0),-1)
         return final
 
-    #Finds all lines in an image and return their plottable characteristics
+    #Finds all lines in an image and return their line endpoints
     #img - image to get line locations from
     #TODO Make this return values in a set scale so images are consistant // Finish implimentation
     def detect_lines(self, img):
         lines = self.get_lines(img)
-        cv2.imshow('lines', lines)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-        dilated = cv2.dilate(img, np.ones((5, 5)))    
+        line_vector = cv2.HoughLinesP(lines,rho = 1,theta = 1*np.pi/180,threshold = 40,minLineLength = 1,maxLineGap = 20)
+        print(len(line_vector))
+        # dilated = cv2.dilate(lines, np.ones((5, 5)))    
+        return line_vector
