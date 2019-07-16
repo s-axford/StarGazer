@@ -46,20 +46,8 @@ class ShapeDetector:
         cv2.imshow('lines', lines)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-        # dilated = cv2.dilate(img, np.ones((5, 5)))
-        #Threshold to binary
-        # thresh = 100
-        # threshold = cv2.threshold(rgb, thresh, 255, cv2.THRESH_BINARY)[1]   
-        # cv2.imshow('threshold', threshold)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        # rgb[threshold > 100] = 255      
-        # lines = cv2.inRange(lines, (0, 0, 0), (255, 255, 255))
-        # lines = cv2.subtract(rgb, stars)
-        # cv2.imshow('threshold', rgb)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        # lines = cv2.inRange( rgb, (0, 0, 200), (40, 40, 255)) + cv2.inRange( rgb, (200, 200, 200), (255, 255, 255))
-        cv2.imshow('lines', lines)
+        dilated = cv2.dilate(img, np.ones((5, 5)))    
+        lines = cv2.inRange(lines, (1, 0, 0), (255, 255, 255))
+        cv2.imshow('lines mask', lines)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
