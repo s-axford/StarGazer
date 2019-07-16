@@ -4,10 +4,21 @@ import numpy as np
  
 class ShapeDetector:
  
+    #Returns mask of the stars in the image
+    #img - Image to find stars in
     def get_stars(self, img):
         stars = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         return cv2.inRange(stars, (240, 0, 0), (255, 10, 10))
 
+    #Returns mask of lines in the image
+    #img - image to find lines in
+    def get_lines(self, img):
+        lines = self.remove_stars(img)
+        return cv2.inRange(lines, (1, 0, 0), (255, 255, 255))
+
+    #Finds all stars in an image and return their cordinates and size
+    #img - image to get star locations from
+    #TODO Make this return values in a set scale so images are consistant
     def detect_stars(self, img):
         stars = self.get_stars(img)
 
@@ -28,8 +39,10 @@ class ShapeDetector:
                 labels.append(len(cnt))
         return x,y,labels
 
+    #Removes all stars from an image and returns result
+    #img - image stars should be removed from
     def remove_stars(self, img):
-        lines = img
+        final = img
         stars = self.get_stars(img)
         ret,thresh = cv2.threshold(stars,127,255,1)
 
@@ -37,17 +50,15 @@ class ShapeDetector:
         for cnt in contours:
             approx = cv2.approxPolyDP(cnt,0.01*cv2.arcLength(cnt,True),True)
             if len(approx) > 8: #if a star is found
-                cv2.drawContours(lines,[cnt],0,(0,0,0),-1)
-        return lines
+                cv2.drawContours(final,[cnt],0,(0,0,0),-1)
+        return final
 
-
+    #Finds all lines in an image and return their plottable characteristics
+    #img - image to get line locations from
+    #TODO Make this return values in a set scale so images are consistant // Finish implimentation
     def detect_lines(self, img):
-        lines = self.remove_stars(img)
+        lines = self.get_lines(img)
         cv2.imshow('lines', lines)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
         dilated = cv2.dilate(img, np.ones((5, 5)))    
-        lines = cv2.inRange(lines, (1, 0, 0), (255, 255, 255))
-        cv2.imshow('lines mask', lines)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()

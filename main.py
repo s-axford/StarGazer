@@ -36,17 +36,17 @@ def main():
     print(labels)
     fig, ax = plt.subplots() 
     plt.scatter(x, y)
-    # plt.axis([-2, 2, -2, 2])
+    # plt.axis([-2, 2, -2, 2]) // TODO have this as scale returned from detect_stars and detect_lines
     for i, txt in enumerate(labels):
         ax.annotate(txt, (x[i], y[i]))
-    # plt.show()
+    plt.show()
 
     #Crop
     img = crop_image(gray, img, 40)
 
-    # cv2.imshow('Finished Product', img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.imshow('Finished Product', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
