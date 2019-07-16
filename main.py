@@ -28,6 +28,10 @@ def main():
     #Find stars
     shapedetector = ShapeDetector()
     x, y, labels = shapedetector.detect_stars(img)
+    cv2.imshow('Finished Product', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    shapedetector.detect_lines(img)
 
     print(labels)
     fig, ax = plt.subplots() 
@@ -35,14 +39,14 @@ def main():
     # plt.axis([-2, 2, -2, 2])
     for i, txt in enumerate(labels):
         ax.annotate(txt, (x[i], y[i]))
-    plt.show()
+    # plt.show()
 
     #Crop
     img = crop_image(gray, img, 40)
 
-    cv2.imshow('Finished Product', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('Finished Product', img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
