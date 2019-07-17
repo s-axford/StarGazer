@@ -5,6 +5,10 @@ import numpy as np
  
 class ShapeDetector:
  
+    def get_all(self, img):
+        stars = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        return cv2.inRange(stars, (0, 0, 1), (255, 255, 255))
+
     #  Returns mask of the stars in the image
     #  img - Image to find stars in
     def get_stars(self, img):
@@ -19,19 +23,16 @@ class ShapeDetector:
 
     #  Finds all stars in an image and return their cordinates and size
     #  img - image to get star locations from
-    def detect_stars(self, img):
-        stars = self.get_stars(img)
-
+    def detect_stars(self, stars):
         # initialize the shape name and approximate the contour
         ret, thresh = cv2.threshold(stars, 127, 255, 1)
-
         contours, h = cv2.findContours(thresh, 1, 2)
         x = []
         y = []
         labels = []
         for cnt in contours:
             approx = cv2.approxPolyDP(cnt,0.01*cv2.arcLength(cnt,True),True)
-            if len(approx) > 8:  # if a star is found
+            if len(approx) > 2:  # if a star is found
                 #  Find x and y cords
                 M = cv2.moments(cnt)
                 x.append((int(M["m10"] / M["m00"]))/100)
@@ -56,7 +57,6 @@ class ShapeDetector:
     # Finds all lines in an image and return their line endpoints
     # img - image to get line locations from
     def detect_lines(self, img):
-        cv2.imshow('image', img)
         lines = self.get_lines(img)
         line_vector = cv2.HoughLinesP(lines, rho=1, theta=np.pi/180, threshold=40, minLineLength=0, maxLineGap=20)
         new_line_vector = line_vector.astype(float)

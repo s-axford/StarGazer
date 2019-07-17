@@ -21,7 +21,8 @@ class ConstellationBuilder:
 
         #Find stars
         shapedetector = ShapeDetector()
-        x, y, mags = shapedetector.detect_stars(img)
+        stars = shapedetector.get_stars(img)
+        x, y, mags = shapedetector.detect_stars(stars)
         lines = shapedetector.detect_lines(img)
         return Constellation(x,y,mags,lines)
 
@@ -44,7 +45,8 @@ class ConstellationBuilder:
     
             # Find stars
             shapedetector = ShapeDetector()
-            x, y, mags = shapedetector.detect_stars(img)
+            stars = shapedetector.get_stars(img)
+            x, y, mags = shapedetector.detect_stars(stars)
             lines = shapedetector.detect_lines(img)
             constellations.append(Constellation(x, y, mags, lines))
         return constellations
