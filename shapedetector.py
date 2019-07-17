@@ -59,7 +59,7 @@ class ShapeDetector:
     #TODO Make this return values in a set scale so images are consistant // Finish implimentation
     def detect_lines(self, img):
         lines = self.get_lines(img)
+        # dilated = cv2.dilate(lines, np.ones((5, 5)))    
         line_vector = cv2.HoughLinesP(lines,rho = 1,theta = 1*np.pi/180,threshold = 40,minLineLength = 1,maxLineGap = 20)
         print(len(line_vector))
-        # dilated = cv2.dilate(lines, np.ones((5, 5)))    
         return line_vector
