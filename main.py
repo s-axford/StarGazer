@@ -21,7 +21,7 @@ def main():
         constellation.dump_info()
         fig, ax = plt.subplots() 
         plt.scatter(constellation.stars_x, constellation.stars_y)
-        # plt.axis([-2, 2, -2, 2]) # TODO have this as scale returned from detect_stars and detect_lines
+        plt.axis([0, 8, -5, 0])
         for i, txt in enumerate(constellation.stars_mags):
             ax.annotate(txt, (constellation.stars_x[i], constellation.stars_y[i]))
     
@@ -33,19 +33,19 @@ def main():
     # Read in Image
     img = cv2.imread('DemoImages/ursa_major.png', cv2.IMREAD_COLOR)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
+
     #Threshold to binary
     thresh = 100
-    img = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)[1]  
+    img = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)[1]
     stars = sd.get_all(img)
     x,y,mags = sd.detect_stars(stars)
-    fig, ax = plt.subplots() 
+    fig, ax = plt.subplots()
     plt.scatter(x, y)
     # plt.axis([-2, 2, -2, 2]) # TODO have this as scale returned from detect_stars and detect_lines
     for i, txt in enumerate(mags):
         ax.annotate(2*txt, (x[i], y[i]))
     plt.show()
-    
+
     #Crop
     # img = crop_image(gray, img, 40)
 
@@ -55,4 +55,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
