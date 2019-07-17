@@ -14,14 +14,14 @@ def crop_image(gray, img,tol=0):
 def main():
 
     cd = ConstellationBuilder()
-    #Constallation Object
+    # Constallation Object
     ursa_major = cd.build_ursa_major()
     constellations = cd.build_all()
     for constellation in constellations:
-        constellation.dump_info()
+        # constellation.dump_info()
         fig, ax = plt.subplots() 
         plt.scatter(constellation.stars_x, constellation.stars_y)
-        # plt.axis([-2, 2, -2, 2]) # TODO have this as scale returned from detect_stars and detect_lines
+        plt.axis([0, 8, -5, 0])
         for i, txt in enumerate(constellation.stars_mags):
             ax.annotate(txt, (constellation.stars_x[i], constellation.stars_y[i]))
     
@@ -30,7 +30,7 @@ def main():
 
         plt.show()
 
-    #Crop
+    # Crop
     # img = crop_image(gray, img, 40)
 
     # cv2.imshow('Finished Product', img)
@@ -39,4 +39,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
