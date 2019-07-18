@@ -54,6 +54,8 @@ def main():
 
     plt.show()
 
+    cd.search_for_constellation(ursa_major, x, y, mags)
+
     cv2.imshow('Finished Product', stars)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
