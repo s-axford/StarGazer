@@ -3,6 +3,7 @@ import numpy as np
 from shapedetector import ShapeDetector
 from constellation import Constellation
 from constellationbuilder import ConstellationBuilder
+from constellationdetector import ConstellationDetector
 import matplotlib.pyplot as plt
 
 def crop_image(gray, img,tol=0):
@@ -31,7 +32,7 @@ def main():
         plt.show()
 
     # Read in Image
-    img = cv2.imread('DemoImages/ursa_major.png', cv2.IMREAD_COLOR)
+    img = cv2.imread('DemoImages/ursa_major_cropped.png', cv2.IMREAD_COLOR)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     #Threshold to binary
@@ -41,13 +42,17 @@ def main():
     x,y,mags = sd.detect_stars(stars)
     fig, ax = plt.subplots()
     plt.scatter(x, y)
-    # plt.axis([-2, 2, -2, 2]) # TODO have this as scale returned from detect_stars and detect_lines
     for i, txt in enumerate(mags):
         ax.annotate(2*txt, (x[i], y[i]))
-    plt.show()
 
-    #Crop
-    # img = crop_image(gray, img, 40)
+    #Find two brightest stars in image and mark them
+    cd = ConstellationDetector(constellations)
+    l1, l2 = cd.find_brightest_stars(mags)
+
+    plt.plot(x[l1], y[l1], 'r+') 
+    plt.plot(x[l2], y[l2], 'y+')
+
+    plt.show()
 
     cv2.imshow('Finished Product', stars)
     cv2.waitKey(0)
