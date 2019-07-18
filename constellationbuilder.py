@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from shapedetector import ShapeDetector
 from constellation import Constellation
+from operator import itemgetter, attrgetter
 import glob
 
 class ConstellationBuilder:
@@ -49,4 +50,4 @@ class ConstellationBuilder:
             x, y, mags = shapedetector.detect_stars(stars)
             lines = shapedetector.detect_lines(img)
             constellations.append(Constellation(x, y, mags, lines))
-        return constellations
+        return sorted(constellations, key=attrgetter('number_of_stars'))
