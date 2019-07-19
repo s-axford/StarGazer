@@ -32,6 +32,12 @@ class ConstellationDetector:
         # Shift template to contellation
         cx, cy = shift_to_coordinates(result[0], result[1], -x0, -y0)
 
+        # Check for match
+        matches = self.check_for_matches(cx, cy, x, y, test_scale)
+        # If atleast half the stars match, draw the star
+        if(matches >= 0.5*len(con.stars_x)):
+            return cx, cy, angle, test_scale
+
         # Plot
         fig, ax = plt.subplots()
         plt.scatter(x, y)
@@ -39,3 +45,15 @@ class ConstellationDetector:
         for i, txt in enumerate(con.stars_mags):
             ax.annotate(2*txt, (x[i], y[i]))
         plt.show()
+
+    # Check for matches returns the amount of stars similar between a template and a image according to a scale
+    def check_for_matches(self, temp_x, temp_y, x, y, scale):
+        matches = 0
+        threshold = 0.15 / scale # 0.15 because science
+        for temp_star in range(len(temp_x)):
+            for test_star in range(len(x)):
+                x_diff = abs(temp_x[temp_star] - x[test_star])
+                y_diff = abs(temp_y[temp_star] - y[test_star])
+                if(x_diff < threshold and y_diff < threshold):
+                    matches += 1
+        return matches
