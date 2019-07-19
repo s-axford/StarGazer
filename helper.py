@@ -36,6 +36,8 @@ def straighten(x, y, mags):
     y = result[1]
     return x, y, angle
 
+# scales x and y values by dividing by the scale
+# scale - scale difference between the test image and template
 def scale(x, y, scale):
     for i in range(len(x)):
         x[i] /= scale
