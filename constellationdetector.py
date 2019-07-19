@@ -1,4 +1,4 @@
-from helper import straighten
+from helper import format_lines_for_presentation
 import matplotlib.pyplot as plt
 from helper import find_brightest_stars, shift_to_coordinates, scale
 import numpy as np
@@ -30,18 +30,22 @@ class ConstellationDetector:
         cx, cy = scale(cx, cy, test_scale)
 
         # Shift template to contellation
-        cx, cy = shift_to_coordinates(result[0], result[1], -x0, -y0)
+        cx, cy = shift_to_coordinates(cx, cy, -x0, -y0)
 
         # Check for match
         matches = self.check_for_matches(cx, cy, x, y, test_scale)
         # If atleast half the stars match, draw the star
-        if(matches >= 0.5*len(con.stars_x)):
-            return cx, cy, angle, test_scale
+        lines = []
+        if matches >= 0.5*len(con.stars_x):
+            lines = format_lines_for_presentation(con.lines, -angle, (-x0, -y0), test_scale)
+            return cx, cy, lines
 
         # Plot
         fig, ax = plt.subplots()
         plt.scatter(x, y)
         plt.scatter(cx, cy)
+        for line in lines:
+            plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
         for i, txt in enumerate(con.stars_mags):
             ax.annotate(2*txt, (x[i], y[i]))
         plt.show()
@@ -54,6 +58,6 @@ class ConstellationDetector:
             for test_star in range(len(x)):
                 x_diff = abs(temp_x[temp_star] - x[test_star])
                 y_diff = abs(temp_y[temp_star] - y[test_star])
-                if(x_diff < threshold and y_diff < threshold):
+                if x_diff < threshold and y_diff < threshold:
                     matches += 1
         return matches

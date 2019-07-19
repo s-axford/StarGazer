@@ -85,10 +85,14 @@ def shift_to_coordinates(x, y, x_coordinate, y_coordinate):
 
 
 # straightens lines to match stars
-def format_lines_for_presentation(lines, angle, brightest_star):
+def format_lines_for_presentation(lines, angle, shift, scale_factor=None):
     formatted_lines = format_lines_for_manipulation(lines)
     result = np.matmul(np.array([[math.cos(angle), -math.sin(angle)], [math.sin(angle), math.cos(angle)]]),
                        formatted_lines)
-    shifted_x, shifted_y = shift_to_coordinates(result[0], result[1], brightest_star[0], -brightest_star[1])
-    x = revert_line_formatting(shifted_x, shifted_y)
+    # Scale if a factor is provided
+    if scale_factor is not None:
+        result[0], result[1] = scale(result[0], result[1], scale_factor)
+
+    result[0], result[1] = shift_to_coordinates(result[0], result[1], shift[0], -shift[1])
+    x = revert_line_formatting(result[0], result[1])
     return x

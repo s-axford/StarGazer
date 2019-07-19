@@ -5,7 +5,7 @@ from constellation import Constellation
 from constellationbuilder import ConstellationBuilder
 from constellationdetector import ConstellationDetector
 import matplotlib.pyplot as plt
-from helper import find_brightest_stars
+from helper import find_brightest_stars, format_lines_for_presentation
 
 def crop_image(gray, img,tol=0):
     # img is image data
@@ -54,9 +54,7 @@ def main():
     plt.plot(x[l2], y[l2], 'y+')
 
     plt.show()
-
-    tx, ty, angle, scale = cd.search_for_constellation(constellations[2], x, y, mags)
-
+    tx, ty, lines = cd.search_for_constellation(constellations[2], x, y, mags)
     cv2.imshow('Finished Product', stars)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
