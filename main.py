@@ -55,7 +55,7 @@ def main():
 
     plt.show()
 
-    cd.search_for_constellation(ursa_major, x, y, mags)
+    tx, ty, angle, scale = cd.search_for_constellation(constellations[2], x, y, mags)
 
     cv2.imshow('Finished Product', stars)
     cv2.waitKey(0)
