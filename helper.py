@@ -36,6 +36,12 @@ def straighten(x, y, mags):
     y = result[1]
     return x, y, angle
 
+def scale(x, y, scale):
+    for i in range(len(x)):
+        x[i] /= scale
+        y[i] /= scale
+    return x, y
+
 
 # formats lines to x and y lists
 def format_lines_for_manipulation(lines):

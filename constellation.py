@@ -7,7 +7,7 @@ class Constellation:
     stars_mags = []
     lines = []
     number_of_stars = 0
-    brightest_stars = []
+    brightest_stars_index = []
 
     def __init__(self, x, y, mag, cons_lines):
         self.stars_x = x
