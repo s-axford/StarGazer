@@ -1,6 +1,6 @@
 from helper import straighten
 import matplotlib.pyplot as plt
-from helper import find_brightest_stars
+from helper import find_brightest_stars, shift_to_coordinates, scale
 import numpy as np
 import math
 
@@ -10,20 +10,29 @@ class ConstellationDetector:
         consellations = consellations_array
 
     def search_for_constellation(self, con, x, y, mags):
+        # Find brightest star
         l1, l2 = find_brightest_stars(mags)
         x0, x1 = x[l1], x[l2]
         y0, y1 = y[l1], y[l2]
         dx = x1 - x0
         dy = y1 - y0
+        
         # Shift for angle
         angle = 90*(1-np.sign(dx)) + math.atan(dy/dx)
-        rotation_matrix = np.array([[math.cos(angle), math.sin(angle)],[-math.sin(angle), math.cos(angle)]])
+        rotation_matrix = np.array([[math.cos(angle), -math.sin(angle)],[math.sin(angle), math.cos(angle)]])
         position_matrix = np.array([con.stars_x, con.stars_y])
-        brightest = np.array([x0, y0])
         result = np.matmul(rotation_matrix, position_matrix)
-        # result = np.add(result, brightest)
-        cx = result[0]
-        cy = result[1]
+        cx, cy = result[0], result[1]
+
+        # Scale template to match test image
+        cdx = cx[con.brightest_stars_index[1]] - cx[con.brightest_stars_index[0]]
+        test_scale = cdx/dx
+        cx, cy = scale(cx, cy, test_scale)
+
+        # Shift template to contellation
+        cx, cy = shift_to_coordinates(result[0], result[1], -x0, -y0)
+
+        # Plot
         fig, ax = plt.subplots()
         plt.scatter(x, y)
         plt.scatter(cx, cy)
