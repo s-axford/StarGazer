@@ -1,6 +1,6 @@
 from helper import straighten
 import matplotlib.pyplot as plt
-from shapedetector import ShapeDetector
+from helper import find_brightest_stars
 import numpy as np
 import math
 
@@ -10,8 +10,7 @@ class ConstellationDetector:
         consellations = consellations_array
 
     def search_for_constellation(self, con, x, y, mags):
-        sd = ShapeDetector()
-        l1, l2 = sd.find_brightest_stars(mags)
+        l1, l2 = find_brightest_stars(mags)
         x0, x1 = x[l1], x[l2]
         y0, y1 = y[l1], y[l2]
         dx = x1 - x0

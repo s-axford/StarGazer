@@ -26,7 +26,7 @@ class ConstellationBuilder:
         x, y, mags = shapedetector.detect_stars(stars)
         lines = shapedetector.detect_lines(img)
         con = Constellation(x, y, mags, lines)
-        con.straighten()
+        con.align_constellation()
         return Constellation(x,y,mags,lines)
 
     def build_all(self):
@@ -52,7 +52,7 @@ class ConstellationBuilder:
             x, y, mags = shapedetector.detect_stars(stars)
             lines = shapedetector.detect_lines(img)
             con = Constellation(x, y, mags, lines)
-            con.straighten()
+            con.align_constellation()
             constellations.append(con)
         return sorted(constellations, key=attrgetter('number_of_stars'))
 
