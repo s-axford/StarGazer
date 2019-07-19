@@ -22,7 +22,7 @@ def main():
         constellation.dump_info()
         fig, ax = plt.subplots() 
         plt.scatter(constellation.stars_x, constellation.stars_y)
-        plt.axis([0, 8, -5, 0])
+        # plt.axis([0, 8, -5, 0])
         for i, txt in enumerate(constellation.stars_mags):
             ax.annotate(txt, (constellation.stars_x[i], constellation.stars_y[i]))
     
@@ -47,12 +47,14 @@ def main():
 
     #Find two brightest stars in image and mark them
     cd = ConstellationDetector(constellations)
-    l1, l2 = cd.find_brightest_stars(mags)
+    l1, l2 = sd.find_brightest_stars(mags)
 
     plt.plot(x[l1], y[l1], 'r+') 
     plt.plot(x[l2], y[l2], 'y+')
 
     plt.show()
+
+    cd.search_for_constellation(ursa_major, x, y, mags)
 
     cv2.imshow('Finished Product', stars)
     cv2.waitKey(0)

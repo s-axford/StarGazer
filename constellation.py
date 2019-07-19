@@ -1,3 +1,4 @@
+from helper import straighten
 class Constellation:
     stars_x = []
     stars_y = []
@@ -17,3 +18,6 @@ class Constellation:
         print(self.stars_y)
         print(self.stars_mags)
         print(self.lines)
+
+    def straighten(self):
+        self.stars_x, self.stars_y = straighten(self.stars_x, self.stars_y, self.stars_mags)
