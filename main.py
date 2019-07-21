@@ -1,11 +1,11 @@
 import cv2
+import sys
 import numpy as np
 from shapedetector import ShapeDetector
-from constellation import Constellation
 from constellationbuilder import ConstellationBuilder
 from constellationdetector import ConstellationDetector
 import matplotlib.pyplot as plt
-from helper import find_brightest_stars, format_lines_for_presentation
+from helper import find_brightest_stars
 from drawing import draw_stars, draw_lines
 
 def crop_image(gray, img,tol=0):
@@ -16,8 +16,9 @@ def crop_image(gray, img,tol=0):
 
 def main():
     sd = ShapeDetector()
-    cd = ConstellationBuilder()
     # Constallation Object
+    cd = ConstellationBuilder()
+    file = sys.argv[1]
     ursa_major = cd.build_ursa_major()
     constellations = cd.build_all()
     for constellation in constellations:
@@ -33,8 +34,8 @@ def main():
         plt.show()
 
     # Read in Image
-    img = cv2.imread('DemoImages/gemini_cropped.png', cv2.IMREAD_COLOR)
-    final_img = cv2.imread('DemoImages/gemini_cropped.png', cv2.IMREAD_COLOR)
+    img = cv2.imread(file, cv2.IMREAD_COLOR)
+    final_img = cv2.imread(file, cv2.IMREAD_COLOR)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # cv2.imshow('Starting Image', img)
     # cv2.waitKey(0)
@@ -80,4 +81,7 @@ def main():
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print('usage: python3 main.py {path to image}')
+        exit()
     main()
