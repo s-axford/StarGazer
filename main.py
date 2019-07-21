@@ -53,32 +53,29 @@ def main():
 
     #Find two brightest stars in image and mark them
     cd = ConstellationDetector(constellations)
-    l1, l2 = find_brightest_stars(mags)
     sorted_mags = order_mags(mags)
-    print(mags)
-    print(sorted_mags)
+    l1, l2 = sorted_mags[0], sorted_mags[1]
     x_test = x.copy()
     y_test = y.copy()
     mags_test = mags.copy()
     for constellation in constellations:
         for i in range(1, len(mags) - 1):
             tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x_test, y_test, mags_test, sorted_mags[0], sorted_mags[i])
-            print(matched)
             if matched:
                 break
         if matched:
             break
 
-    plt.plot(x[l1], y[l1], 'r+')
-    plt.plot(x[l2], y[l2], 'y+')
+    plt.plot(x_test[l1], y_test[l1], 'r+')
+    plt.plot(x_test[l2], y_test[l2], 'y+')
 
-    # if matched:
-    plt.plot(tx, ty, 'y*')
-    for line in lines:
-        plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
-    # Draw constellation on image
-    draw_stars(tx, ty, t_scale, final_img)
-    draw_lines(lines, final_img)
+    if matched:
+        plt.plot(tx, ty, 'y*')
+        for line in lines:
+            plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
+        # Draw constellation on image
+        draw_stars(tx, ty, t_scale, final_img)
+        draw_lines(lines, final_img)
 
     plt.show()
 

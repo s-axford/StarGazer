@@ -1,4 +1,4 @@
-from helper import straighten, format_lines_for_presentation, find_brightest_stars, shift_to_coordinates
+from helper import straighten, format_lines_for_presentation, find_brightest_stars, shift_to_coordinates, order_mags
 
 
 class Constellation:
@@ -15,7 +15,8 @@ class Constellation:
         self.stars_mags = mag
         self.lines = cons_lines
         self.number_of_stars = len(mag)
-        l1, l2 = find_brightest_stars(mag)
+        sorted_mags = order_mags(self.stars_mags)
+        l1, l2 = sorted_mags[0], sorted_mags[1]
         self.brightest_stars_index = [l1, l2]
     
     def dump_info(self):
