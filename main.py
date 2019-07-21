@@ -63,8 +63,6 @@ def main():
             plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
     plt.show()
 
-    sd.get_image_size(stars)
-
     height, width, channels = img.shape 
 
     # Draw constellation on image
