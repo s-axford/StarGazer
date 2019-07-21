@@ -10,9 +10,8 @@ class ConstellationDetector:
         consellations = consellations_array
 
     def search_for_constellation(self, con, x, y, mags, l1, l2):
-        print("L1")
+        print("largest stars:")
         print(mags[l1])
-        print("L2")
         print(mags[l2])
         # Find brightest star
         x0, x1 = x[l1], x[l2]
@@ -32,19 +31,15 @@ class ConstellationDetector:
         test_scale = cdx/dx
         cx, cy = scale(cx, cy, test_scale)
 
-        # Shift template to contellation
+        # Shift template to constellation
         cx, cy = shift_to_coordinates(cx, cy, -x0, -y0)
-
+        print(test_scale)
         # Check for match
         matches = self.check_for_matches(cx, cy, x, y, test_scale)
+        print("matches:")
+        print(matches)
         # If atleast half the stars match, draw the star
         lines = []
-        print("Stars Matching")
-        print(matches)
-        fig, ax = plt.subplots()
-        plt.scatter(x,y)
-        plt.plot(cx, cy, 'y*')
-        plt.show()
         if matches >= 0.5*len(con.stars_x):
             lines = format_lines_for_presentation(con.lines, -angle, (-x0, -y0), test_scale)
             return cx, cy, lines, test_scale, True
@@ -53,7 +48,7 @@ class ConstellationDetector:
     # Check for matches returns the amount of stars similar between a template and a image according to a scale
     def check_for_matches(self, temp_x, temp_y, x, y, scale):
         matches = 0
-        threshold = 0.15 / scale # 0.15 because science
+        threshold = 0.15 / scale  # 0.15 because science
         for temp_star in range(len(temp_x)):
             for test_star in range(len(x)):
                 x_diff = abs(temp_x[temp_star] - x[test_star])

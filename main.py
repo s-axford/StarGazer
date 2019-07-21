@@ -1,12 +1,12 @@
 import cv2
+import sys
 import numpy as np
 from shapedetector import ShapeDetector
-from constellation import Constellation
 from constellationbuilder import ConstellationBuilder
 from constellationdetector import ConstellationDetector
 import matplotlib.pyplot as plt
-from helper import find_brightest_stars, format_lines_for_presentation, order_mags
-from drawing import draw_stars
+from helper import find_brightest_stars, order_mags
+from drawing import draw_stars, draw_lines
 
 def crop_image(gray, img,tol=0):
     # img is image data
@@ -16,25 +16,26 @@ def crop_image(gray, img,tol=0):
 
 def main():
     sd = ShapeDetector()
-    cd = ConstellationBuilder()
     # Constallation Object
+    cd = ConstellationBuilder()
+    file = sys.argv[1]
     ursa_major = cd.build_ursa_major()
     constellations = cd.build_all()
     for constellation in constellations:
-        fig, ax = plt.subplots() 
+        fig, ax = plt.subplots()
         plt.scatter(constellation.stars_x, constellation.stars_y)
         # plt.axis([0, 8, -5, 0])
         for i, txt in enumerate(constellation.stars_mags):
             ax.annotate(txt, (constellation.stars_x[i], constellation.stars_y[i]))
-    
+
         for line in constellation.lines:
             plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
 
         plt.show()
 
     # Read in Image
-    img = cv2.imread('DemoImages/gemini_cropped.png', cv2.IMREAD_COLOR)
-    final_img = cv2.imread('DemoImages/gemini_cropped.png', cv2.IMREAD_COLOR)
+    img = cv2.imread(file, cv2.IMREAD_COLOR)
+    final_img = cv2.imread(file, cv2.IMREAD_COLOR)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # cv2.imshow('Starting Image', img)
     # cv2.waitKey(0)
@@ -54,26 +55,29 @@ def main():
     cd = ConstellationDetector(constellations)
     l1, l2 = find_brightest_stars(mags)
     sorted_mags = order_mags(mags)
+    print(mags)
     print(sorted_mags)
-    for i in range(1, len(mags)-1):
-        for constellation in constellations:
-            tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x, y, mags, sorted_mags[0], sorted_mags[2])
+    for constellation in constellations:
+        for i in range(1, len(mags) - 1):
+            tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x, y, mags, sorted_mags[0], sorted_mags[i])
             if matched:
                 break
 
-    plt.plot(x[l1], y[l1], 'r+') 
+    plt.plot(x[l1], y[l1], 'r+')
     plt.plot(x[l2], y[l2], 'y+')
 
-    if matched:
-        plt.plot(tx, ty, 'y*')
-        for line in lines:
-            plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
-        # Draw constellation on image
-        draw_stars(tx, ty, t_scale, final_img)
+    # if matched:
+    plt.plot(tx, ty, 'y*')
+    for line in lines:
+        plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
+    # Draw constellation on image
+    draw_stars(tx, ty, t_scale, final_img)
+    draw_lines(lines, final_img)
+
     plt.show()
 
-    height, width, channels = img.shape 
-    
+    height, width, channels = img.shape
+
     final_img = cv2.resize(final_img, (width*2, height*2))
 
     cv2.imshow('Finished Product', final_img)
@@ -81,4 +85,7 @@ def main():
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print('usage: python3 main.py {path to image}')
+        exit()
     main()
