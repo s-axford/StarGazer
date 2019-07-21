@@ -38,7 +38,7 @@ class ConstellationDetector:
         lines = []
         if matches >= 0.5*len(con.stars_x):
             lines = format_lines_for_presentation(con.lines, -angle, (-x0, -y0), test_scale)
-            return cx, cy, lines
+            return cx, cy, lines, test_scale
 
         # Plot
         fig, ax = plt.subplots()
