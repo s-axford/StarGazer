@@ -57,11 +57,17 @@ def main():
     sorted_mags = order_mags(mags)
     print(mags)
     print(sorted_mags)
+    x_test = x.copy()
+    y_test = y.copy()
+    mags_test = mags.copy()
     for constellation in constellations:
         for i in range(1, len(mags) - 1):
-            tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x, y, mags, sorted_mags[0], sorted_mags[i])
+            tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x_test, y_test, mags_test, sorted_mags[0], sorted_mags[i])
+            print(matched)
             if matched:
                 break
+        if matched:
+            break
 
     plt.plot(x[l1], y[l1], 'r+')
     plt.plot(x[l2], y[l2], 'y+')
