@@ -5,7 +5,7 @@ from shapedetector import ShapeDetector
 from constellationbuilder import ConstellationBuilder
 from constellationdetector import ConstellationDetector
 import matplotlib.pyplot as plt
-from helper import find_brightest_stars
+from helper import find_brightest_stars, order_mags
 from drawing import draw_stars, draw_lines
 
 def crop_image(gray, img,tol=0):
@@ -22,12 +22,12 @@ def main():
     ursa_major = cd.build_ursa_major()
     constellations = cd.build_all()
     for constellation in constellations:
-        fig, ax = plt.subplots() 
+        fig, ax = plt.subplots()
         plt.scatter(constellation.stars_x, constellation.stars_y)
         # plt.axis([0, 8, -5, 0])
         for i, txt in enumerate(constellation.stars_mags):
             ax.annotate(txt, (constellation.stars_x[i], constellation.stars_y[i]))
-    
+
         for line in constellation.lines:
             plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
 
@@ -53,14 +53,21 @@ def main():
 
     #Find two brightest stars in image and mark them
     cd = ConstellationDetector(constellations)
-    l1, l2 = find_brightest_stars(mags)
+    sorted_mags = order_mags(mags)
+    l1, l2 = sorted_mags[0], sorted_mags[1]
+    x_test = x.copy()
+    y_test = y.copy()
+    mags_test = mags.copy()
     for constellation in constellations:
-        tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x, y, mags)
+        for i in range(1, len(mags) - 1):
+            tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x_test, y_test, mags_test, sorted_mags[0], sorted_mags[i])
+            if matched:
+                break
         if matched:
             break
 
-    plt.plot(x[l1], y[l1], 'r+') 
-    plt.plot(x[l2], y[l2], 'y+')
+    plt.plot(x_test[l1], y_test[l1], 'r+')
+    plt.plot(x_test[l2], y_test[l2], 'y+')
 
     if matched:
         plt.plot(tx, ty, 'y*')
