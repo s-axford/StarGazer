@@ -95,3 +95,18 @@ class ShapeDetector:
                     new_lines[k] = x/100.0
                 new_line_vector[i][j] = new_lines
         return new_line_vector
+
+    def get_image_size(self, img):
+        # initialize the shape name and approximate the contour
+        ret, thresh = cv2.threshold(img, 255, 255, 1)
+        contours, h = cv2.findContours(thresh, 1, 2)
+        for cnt in contours:
+            approx = cv2.approxPolyDP(cnt, 0.01*cv2.arcLength(cnt, True), True)
+            if len(approx) > 0:  # if a star is found
+                # Find x and y cords
+                M = cv2.moments(cnt)
+                x_star = (int(M["m10"] / M["m00"]))/100
+                y_star = ((int(M["m01"] / M["m00"]))*-1)/100
+                print(x_star)
+                print(y_star)
+                cv2.drawContours(img, [cnt], 0, (255, 255, 255), -1)
