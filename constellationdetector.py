@@ -38,17 +38,8 @@ class ConstellationDetector:
         lines = []
         if matches >= 0.5*len(con.stars_x):
             lines = format_lines_for_presentation(con.lines, -angle, (-x0, -y0), test_scale)
-            return cx, cy, lines, test_scale
-
-        # Plot
-        fig, ax = plt.subplots()
-        plt.scatter(x, y)
-        plt.scatter(cx, cy)
-        for line in lines:
-            plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
-        for i, txt in enumerate(con.stars_mags):
-            ax.annotate(2*txt, (x[i], y[i]))
-        plt.show()
+            return cx, cy, lines, test_scale, True
+        return cx, cy, lines, test_scale, False
 
     # Check for matches returns the amount of stars similar between a template and a image according to a scale
     def check_for_matches(self, temp_x, temp_y, x, y, scale):

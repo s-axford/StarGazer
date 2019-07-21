@@ -21,7 +21,6 @@ def main():
     ursa_major = cd.build_ursa_major()
     constellations = cd.build_all()
     for constellation in constellations:
-        constellation.dump_info()
         fig, ax = plt.subplots() 
         plt.scatter(constellation.stars_x, constellation.stars_y)
         # plt.axis([0, 8, -5, 0])
@@ -34,12 +33,12 @@ def main():
         plt.show()
 
     # Read in Image
-    img = cv2.imread('DemoImages/ursa_major_cropped.png', cv2.IMREAD_COLOR)
-    final_img = cv2.imread('DemoImages/ursa_major_cropped.png', cv2.IMREAD_COLOR)
+    img = cv2.imread('DemoImages/gemini_cropped.png', cv2.IMREAD_COLOR)
+    final_img = cv2.imread('DemoImages/gemini_cropped.png', cv2.IMREAD_COLOR)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    cv2.imshow('Starting Image', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('Starting Image', img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     #Threshold to binary
     thresh = 100
@@ -54,20 +53,24 @@ def main():
     #Find two brightest stars in image and mark them
     cd = ConstellationDetector(constellations)
     l1, l2 = find_brightest_stars(mags)
-    tx, ty, lines, t_scale = cd.search_for_constellation(constellations[2], x, y, mags)
+    for constellation in constellations:
+        tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x, y, mags)
+        if matched:
+            break
 
     plt.plot(x[l1], y[l1], 'r+') 
     plt.plot(x[l2], y[l2], 'y+')
-    plt.plot(tx, ty, 'y*')
-    for line in lines:
+
+    if matched:
+        plt.plot(tx, ty, 'y*')
+        for line in lines:
             plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
+        # Draw constellation on image
+        draw_stars(tx, ty, t_scale, final_img)
     plt.show()
 
     height, width, channels = img.shape 
-
-    # Draw constellation on image
-    draw_stars(tx, ty, t_scale, final_img)
-
+    
     final_img = cv2.resize(final_img, (width*2, height*2))
 
     cv2.imshow('Finished Product', final_img)
