@@ -5,7 +5,7 @@ from constellation import Constellation
 from constellationbuilder import ConstellationBuilder
 from constellationdetector import ConstellationDetector
 import matplotlib.pyplot as plt
-from helper import find_brightest_stars, format_lines_for_presentation
+from helper import find_brightest_stars, format_lines_for_presentation, order_mags
 from drawing import draw_stars
 
 def crop_image(gray, img,tol=0):
@@ -53,10 +53,13 @@ def main():
     #Find two brightest stars in image and mark them
     cd = ConstellationDetector(constellations)
     l1, l2 = find_brightest_stars(mags)
-    for constellation in constellations:
-        tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x, y, mags)
-        if matched:
-            break
+    sorted_mags = order_mags(mags)
+    print(sorted_mags)
+    for i in range(1, len(mags)-1):
+        for constellation in constellations:
+            tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x, y, mags, sorted_mags[0], sorted_mags[2])
+            if matched:
+                break
 
     plt.plot(x[l1], y[l1], 'r+') 
     plt.plot(x[l2], y[l2], 'y+')

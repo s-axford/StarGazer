@@ -9,9 +9,12 @@ class ConstellationDetector:
     def __init__(self, consellations_array):
         consellations = consellations_array
 
-    def search_for_constellation(self, con, x, y, mags):
+    def search_for_constellation(self, con, x, y, mags, l1, l2):
+        print("L1")
+        print(mags[l1])
+        print("L2")
+        print(mags[l2])
         # Find brightest star
-        l1, l2 = find_brightest_stars(mags)
         x0, x1 = x[l1], x[l2]
         y0, y1 = y[l1], y[l2]
         dx = x1 - x0
@@ -36,6 +39,12 @@ class ConstellationDetector:
         matches = self.check_for_matches(cx, cy, x, y, test_scale)
         # If atleast half the stars match, draw the star
         lines = []
+        print("Stars Matching")
+        print(matches)
+        fig, ax = plt.subplots()
+        plt.scatter(x,y)
+        plt.plot(cx, cy, 'y*')
+        plt.show()
         if matches >= 0.5*len(con.stars_x):
             lines = format_lines_for_presentation(con.lines, -angle, (-x0, -y0), test_scale)
             return cx, cy, lines, test_scale, True

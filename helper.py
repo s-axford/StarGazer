@@ -2,6 +2,12 @@ import numpy as np
 import math
 
 
+def order_mags(mags):
+    vals = mags.copy()
+    sorted_mags = np.argsort(vals)
+    return sorted_mags[::-1]
+
+    
 #Take magnitiude array of an image and returns the index of the largest stars
 def find_brightest_stars(mags):
     #mag values
