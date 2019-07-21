@@ -6,7 +6,7 @@ from constellationbuilder import ConstellationBuilder
 from constellationdetector import ConstellationDetector
 import matplotlib.pyplot as plt
 from helper import find_brightest_stars, format_lines_for_presentation
-from drawing import draw_stars
+from drawing import draw_stars, draw_lines
 
 def crop_image(gray, img,tol=0):
     # img is image data
@@ -67,10 +67,12 @@ def main():
             plt.plot((line.item(0), line.item(2)), (-line.item(1), -line.item(3)), 'ro-', linewidth=2, markersize=0)
         # Draw constellation on image
         draw_stars(tx, ty, t_scale, final_img)
+        draw_lines(lines, final_img)
+
     plt.show()
 
-    height, width, channels = img.shape 
-    
+    height, width, channels = img.shape
+
     final_img = cv2.resize(final_img, (width*2, height*2))
 
     cv2.imshow('Finished Product', final_img)
