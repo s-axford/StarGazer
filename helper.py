@@ -1,6 +1,5 @@
 import numpy as np
 import math
-from scipy.stats import rankdata
 
 def order_mags(mags):
     vals = mags.copy()
