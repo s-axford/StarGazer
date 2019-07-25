@@ -36,7 +36,8 @@ class ConstellationDetector:
         matches = self.check_for_matches(cx, cy, x, y, test_scale)
         # If atleast half the stars match, draw the star
         lines = []
-        if matches >= 0.5*len(con.stars_x):
+        if matches >= 0.5*len(con.stars_x) and matches<len(con.stars_x):
+            print("FOUND MATCH")
             lines = format_lines_for_presentation(con.lines, -angle, (-x0, -y0), test_scale)
             return cx, cy, lines, test_scale, True
         return cx, cy, lines, test_scale, False
