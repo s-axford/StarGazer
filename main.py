@@ -58,9 +58,12 @@ def main():
     x_test = x.copy()
     y_test = y.copy()
     mags_test = mags.copy()
-    for constellation in constellations:
-        for i in range(1, len(mags) - 1):
-            tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x_test, y_test, mags_test, sorted_mags[0], sorted_mags[i])
+    for j in range(0, len(mags)):
+        for constellation in constellations:
+            for i in range(j, len(mags) - 1):
+                tx, ty, lines, t_scale, matched = cd.search_for_constellation(constellation, x_test, y_test, mags_test, sorted_mags[j], sorted_mags[i])
+                if matched:
+                    break
             if matched:
                 break
         if matched:

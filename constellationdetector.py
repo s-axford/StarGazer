@@ -60,7 +60,7 @@ class ConstellationDetector:
     # Check for matches returns the amount of stars similar between a template and a image according to a scale
     def check_for_matches(self, temp_x, temp_y, x, y, scale):
         matches = 0
-        threshold = 0.10 / scale  # 0.15 because science
+        threshold = 0.10 / scale  # 0.10 because science
         for temp_star in range(len(temp_x)):
             for test_star in range(len(x)):
                 x_diff = abs(temp_x[temp_star] - x[test_star])
