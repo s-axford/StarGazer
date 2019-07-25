@@ -1,7 +1,12 @@
 import numpy as np
 import math
 
+def order_mags(mags):
+    vals = mags.copy()
+    sorted_mags = np.argsort(vals)
+    return sorted_mags[::-1]
 
+    
 #Take magnitiude array of an image and returns the index of the largest stars
 def find_brightest_stars(mags):
     #mag values
@@ -25,7 +30,8 @@ def find_brightest_stars(mags):
 # Straightens stars to aling two brightest stars on the x-axis
 #returns straighten star locations
 def straighten(x, y, mags):
-    l1, l2 = find_brightest_stars(mags)
+    sorted_mags = order_mags(mags)
+    l1, l2 = sorted_mags[0], sorted_mags[1]
     dx = x[l2] - x[l1]
     dy = y[l2] - y[l1]
     angle = 90*(1-np.sign(dx)) + math.atan(dy/dx)
