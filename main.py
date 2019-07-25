@@ -19,7 +19,6 @@ def main():
     # Constallation Object
     cd = ConstellationBuilder()
     file = sys.argv[1]
-    ursa_major = cd.build_ursa_major()
     constellations = cd.build_all()
     for constellation in constellations:
         fig, ax = plt.subplots()
